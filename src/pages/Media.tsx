@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import conferenceHallImg from '../imports/images__2_.jpeg';
 import panelImg from '../imports/800449384_18082935035498582_386696378966982864_n.jpg.jpeg';
-import recitersImg from '../imports/758400717_18076609043498582_274570408490348722_n.jpg.jpeg';
+import recitersImg from '../imports/males 1.jpeg';
 import img1 from '../imports/img1.jpeg';
 import img2 from '../imports/img2.jpeg';
 import img3 from '../imports/img3.jpeg';

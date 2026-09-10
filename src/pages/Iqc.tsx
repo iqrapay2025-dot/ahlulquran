@@ -1,7 +1,7 @@
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import { MicIcon, BookIcon, NoteIcon, UsersIcon } from '../components/FlatIcons';
 import panelImg from '../imports/800449384_18082935035498582_386696378966982864_n.jpg.jpeg';
-import recitersImg from '../imports/758400717_18076609043498582_274570408490348722_n.jpg.jpeg';
+import recitersImg from '../imports/males 1.jpeg';
 
 interface IqcProps {
   onNavigate: (page: string) => void;
@@ -14,7 +14,7 @@ const MUTED = '#5A7265';
 const TICKET_HREF = 'https://hilaq.com/e/international-quran-conference';
 
 const HIGHLIGHTS = [
-  { Icon: MicIcon, title: 'Panel Session', desc: "Qur'anic Paradigms of Reform — led by Prof. Habeebah Oladosu and confirmed panelists." },
+  { Icon: MicIcon, title: 'Panel Session', desc: "Qur'anic Paradigms of Reform — with Professor Habeebah Oladosu, Ustaaz Alli Abdus Salaam Temitope and Sheikh Abdullah AbdulHakeem Ajigini." },
   { Icon: BookIcon, title: 'Keynote & Lectures', desc: "Senior scholars examine how the Qur'an rebuilds the intellectual, ethical, spiritual and societal foundations of the Ummah." },
   { Icon: NoteIcon, title: 'Recitations', desc: "World-class Qurrā' and special Qur'anic presentations throughout the day." },
   { Icon: UsersIcon, title: 'Community', desc: 'Students, teachers, scholars and lovers of the Qur\u2019an gathered in one hall.' },
