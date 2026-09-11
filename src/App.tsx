@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import BackToTop from './components/BackToTop';
@@ -83,13 +84,16 @@ export default function App() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen font-sans" style={{ backgroundColor: '#F7F6EF' }}>
-      <Navbar currentPage={page} onNavigate={navigate} />
-      <main className="flex-1">
-        {renderPage()}
-      </main>
-      <Footer onNavigate={navigate} />
-      <BackToTop />
-    </div>
+    <>
+      <div className="flex flex-col min-h-screen font-sans" style={{ backgroundColor: '#F7F6EF' }}>
+        <Navbar currentPage={page} onNavigate={navigate} />
+        <main className="flex-1">
+          {renderPage()}
+        </main>
+        <Footer onNavigate={navigate} />
+        <BackToTop />
+      </div>
+      <Analytics />
+    </>
   );
 }
