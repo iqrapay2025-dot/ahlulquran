@@ -1,4 +1,9 @@
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
+import oladosuImg from '../imports/habeebah oladosu.jpg';
+import temitopeImg from '../imports/Temitope.jpg';
+import ajiginiImg from '../imports/ajigini.jpg';
+import taqwallohImg from '../imports/Taqwalloh.jpg';
+import yepeImg from '../imports/yepe2.jpg';
 
 interface SpeakersProps {
   onNavigate: (page: string) => void;
@@ -14,7 +19,7 @@ const SPEAKERS = [
     color: '#0A331C',
     accent: '#FFC153',
     session: 'Panel Discussion',
-    img: 'https://images.unsplash.com/photo-1594122230689-45899d9e6f69?w=400&h=480&fit=crop&auto=format&crop=faces',
+    img: oladosuImg,
   },
   {
     name: 'Ustaaz Alli Abdus Salaam Temitope',
@@ -25,7 +30,7 @@ const SPEAKERS = [
     color: '#B5352A',
     accent: '#fff',
     session: 'Panel Discussion',
-    img: 'https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=400&h=480&fit=crop&auto=format&crop=faces',
+    img: temitopeImg,
   },
   {
     name: 'Sheikh Abdullah AbdulHakeem Ajigini',
@@ -36,7 +41,7 @@ const SPEAKERS = [
     color: '#12522F',
     accent: '#FFC153',
     session: 'Panel Discussion',
-    img: 'https://images.unsplash.com/photo-1627931539006-d5c4677e05ea?w=400&h=480&fit=crop&auto=format&crop=faces',
+    img: ajiginiImg,
   },
   {
     name: 'Sheikh Abdus Somod Taqwalloh (An Najedbiy)',
@@ -47,7 +52,7 @@ const SPEAKERS = [
     color: '#16201A',
     accent: '#FFC153',
     session: 'Guest Lecture',
-    img: 'https://images.unsplash.com/photo-1544531586-fde5298cdd40?w=400&h=480&fit=crop&auto=format&crop=faces',
+    img: taqwallohImg,
   },
   {
     name: 'Dr. AbdulHakeem Mobolaji Abdullateef (Honourable Yepe)',
@@ -58,7 +63,7 @@ const SPEAKERS = [
     color: '#8B6200',
     accent: '#fff',
     session: 'Guest Lecture',
-    img: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=400&h=480&fit=crop&auto=format&crop=faces',
+    img: yepeImg,
   },
 ];
 
@@ -120,16 +125,16 @@ export default function Speakers({ onNavigate }: SpeakersProps) {
               className="scroll-reveal rounded-2xl overflow-hidden group cursor-pointer transition-all duration-400 hover:-translate-y-2 hover:shadow-2xl"
               style={{ backgroundColor: '#fff', transitionDelay: `${i * 70}ms` }}
             >
-              {/* Card image with color overlay */}
-              <div className="relative h-56 overflow-hidden" style={{ backgroundColor: speaker.color }}>
+              {/* Card image */}
+              <div className="relative h-64 overflow-hidden" style={{ backgroundColor: speaker.color }}>
                 <img
                   src={speaker.img}
                   alt={speaker.name}
-                  className="w-full h-full object-cover opacity-60 mix-blend-luminosity transition-all duration-700 group-hover:opacity-75 group-hover:scale-[1.05]"
+                  className="w-full h-full object-cover object-top transition-all duration-700 group-hover:scale-[1.05]"
                 />
                 <div
-                  className="absolute inset-0"
-                  style={{ background: `linear-gradient(to bottom, transparent 30%, ${speaker.color}ee 100%)` }}
+                  className="absolute inset-x-0 bottom-0 h-20 pointer-events-none"
+                  style={{ background: `linear-gradient(to bottom, transparent, ${speaker.color}cc)` }}
                 />
                 {/* Initials badge */}
                 <div

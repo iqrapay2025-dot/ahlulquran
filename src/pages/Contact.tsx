@@ -17,13 +17,22 @@ const inputCls =
   'w-full bg-white rounded-[10px] px-4 py-3.5 text-sm outline-none transition-colors duration-200 focus:border-[#12522F]';
 const inputStyle = { border: `1px solid ${LINE}`, color: INK };
 
+// Google Apps Script web app URL — deployed from the "Newsletter Subscribers" sheet.
+// Extensions -> Apps Script -> Deploy -> New deployment -> Web app -> Anyone can access.
+const NEWSLETTER_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzUeuNA8j0vVClambcxcTJxhBYy9ZuF-UvhIBnTfMmOrwhrzkN_l_dRYr3Mp_pKlZa5bQ/exec';
+
 export default function Contact({ onNavigate }: ContactProps) {
   const [form, setForm] = useState({ name: '', email: '', message: '' });
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
   const [sendError, setSendError] = useState(false);
   const [subscribed, setSubscribed] = useState(false);
+  const [subscribing, setSubscribing] = useState(false);
+  const [subscribeError, setSubscribeError] = useState(false);
   const [newsletterEmail, setNewsletterEmail] = useState('');
+  // Honeypot — spam bots fill every input they find; humans never see this field.
+  // FormSubmit silently drops submissions that submit a non-empty _honey value.
+  const [honey, setHoney] = useState('');
 
   useScrollAnimation('contact');
 
@@ -31,6 +40,12 @@ export default function Contact({ onNavigate }: ContactProps) {
   // (first-ever submission triggers a one-time confirmation email to activate it).
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    // Honeypot tripped (or invalid email) — pretend success without hitting the endpoint.
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(form.email.trim());
+    if (honey || !form.name.trim() || !form.message.trim() || !emailOk) {
+      setSent(true);
+      return;
+    }
     setSending(true);
     setSendError(false);
     try {
@@ -38,12 +53,13 @@ export default function Contact({ onNavigate }: ContactProps) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify({
-          name: form.name,
-          email: form.email,
-          message: form.message,
-          _subject: `New message from ${form.name} — ahlulquran website`,
+          name: form.name.trim().slice(0, 120),
+          email: form.email.trim().slice(0, 254),
+          message: form.message.trim().slice(0, 5000),
+          _subject: `New message from ${form.name.trim().slice(0, 120)} — ahlulquran website`,
           _template: 'table',
           _captcha: 'false',
+          _honey: honey,
         }),
       });
       if (!res.ok) throw new Error('Send failed');
@@ -55,9 +71,33 @@ export default function Contact({ onNavigate }: ContactProps) {
     }
   };
 
-  const handleSubscribe = (e: React.FormEvent) => {
+  // Appends the email to the "Newsletter Subscribers" Google Sheet via Apps Script.
+  // Content-Type is deliberately text/plain — Apps Script web apps don't handle
+  // CORS preflight (OPTIONS) requests, and application/json triggers one. Sending
+  // as text/plain avoids the preflight while the script still JSON.parses the body.
+  const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (newsletterEmail.trim()) setSubscribed(true);
+    // Trim + validate before sending; skip the endpoint if the email is junk.
+    const email = newsletterEmail.trim().slice(0, 254);
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+      setSubscribeError(true);
+      return;
+    }
+
+    setSubscribing(true);
+    setSubscribeError(false);
+    try {
+      await fetch(NEWSLETTER_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({ email }),
+      });
+      setSubscribed(true);
+    } catch {
+      setSubscribeError(true);
+    } finally {
+      setSubscribing(false);
+    }
   };
 
   return (
@@ -112,6 +152,17 @@ export default function Contact({ onNavigate }: ContactProps) {
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="mt-2">
+                  {/* Honeypot — hidden from humans, catches spam bots */}
+                  <input
+                    type="text"
+                    name="_honey"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    aria-hidden="true"
+                    value={honey}
+                    onChange={(e) => setHoney(e.target.value)}
+                    style={{ position: 'absolute', left: '-9999px', opacity: 0, height: 0, width: 0 }}
+                  />
                   {sendError && (
                     <div
                       className="mt-7 rounded-xl p-4 text-[13px] leading-relaxed"
@@ -133,6 +184,7 @@ export default function Contact({ onNavigate }: ContactProps) {
                   <input
                     type="text"
                     required
+                    maxLength={120}
                     placeholder="Your full name"
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
@@ -158,6 +210,7 @@ export default function Contact({ onNavigate }: ContactProps) {
                   </div>
                   <textarea
                     required
+                    maxLength={5000}
                     placeholder="Your message"
                     rows={5}
                     value={form.message}
@@ -224,24 +277,41 @@ export default function Contact({ onNavigate }: ContactProps) {
                     Subscribed ✓ — welcome to the Ahlul Qur'an family.
                   </p>
                 ) : (
-                  <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-2.5">
-                    <input
-                      type="email"
-                      required
-                      placeholder="Enter your email"
-                      value={newsletterEmail}
-                      onChange={(e) => setNewsletterEmail(e.target.value)}
-                      className="flex-1 rounded-full px-4 py-3 text-sm outline-none"
-                      style={{ backgroundColor: '#fff', color: INK }}
-                    />
-                    <button
-                      type="submit"
-                      className="font-extrabold text-sm px-6 py-3 rounded-full transition-all duration-200 hover:brightness-95"
-                      style={{ backgroundColor: GOLD, color: DEEP }}
-                    >
-                      Subscribe
-                    </button>
-                  </form>
+                  <>
+                    <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-2.5">
+                      <input
+                        type="email"
+                        required
+                        placeholder="Enter your email"
+                        value={newsletterEmail}
+                        maxLength={254}
+                        onChange={(e) => setNewsletterEmail(e.target.value)}
+                        className="flex-1 rounded-full px-4 py-3 text-sm outline-none disabled:opacity-60"
+                        style={{ backgroundColor: '#fff', color: INK }}
+                        disabled={subscribing}
+                      />
+                      <button
+                        type="submit"
+                        disabled={subscribing}
+                        className="font-extrabold text-sm px-6 py-3 rounded-full transition-all duration-200 hover:brightness-95 disabled:opacity-60 disabled:cursor-wait"
+                        style={{ backgroundColor: GOLD, color: DEEP }}
+                      >
+                        {subscribing ? 'Subscribing…' : 'Subscribe'}
+                      </button>
+                    </form>
+                    {subscribeError && (
+                      <p className="mt-2.5 text-xs leading-relaxed" style={{ color: '#FF8A80' }}>
+                        Something went wrong. Please try again, or{' '}
+                        <a
+                          href={`mailto:ahlulquranf@gmail.com?subject=${encodeURIComponent('Newsletter signup')}&body=${encodeURIComponent('Please add me to the newsletter: ' + newsletterEmail)}`}
+                          className="font-bold underline"
+                        >
+                          email us directly
+                        </a>
+                        .
+                      </p>
+                    )}
+                  </>
                 )}
                 <p className="mt-2.5 text-xs" style={{ color: 'rgba(255,255,255,0.55)' }}>
                   By subscribing you agree to our{' '}

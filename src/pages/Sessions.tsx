@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
-import panelImg from '../imports/800449384_18082935035498582_386696378966982864_n.jpg.jpeg';
 import recitersImg from '../imports/males 1.jpeg';
+import reciters2Img from '../imports/males 2.jpeg';
 import yepeImg from '../imports/yepe.jpg';
+import taqwallohImg from '../imports/Taqwalloh.jpg';
+import oladosuImg from '../imports/habeebah oladosu.jpg';
 
 interface SessionsProps {
   onNavigate: (page: string) => void;
@@ -37,7 +39,7 @@ const ALL_SESSIONS = [
     also: [],
     category: 'Keynote',
     ticket: 'All Tickets',
-    img: 'https://images.unsplash.com/photo-1544531586-fde5298cdd40?w=700&h=420&fit=crop&auto=format',
+    img: taqwallohImg,
     desc: "Sheikh Abdus Somod Taqwalloh (An Najedbiy) explores how preserving the Qur'an in the heart leads to a genuine transformation in conduct — from interior devotion to outward practice.",
     color: '#B5352A',
   },
@@ -53,7 +55,7 @@ const ALL_SESSIONS = [
     also: ['Ustaaz Alli Abdus Salaam Temitope', 'Sheikh Abdullah AbdulHakeem Ajigini'],
     category: 'Panel Discussion',
     ticket: 'All Tickets',
-    img: panelImg,
+    img: oladosuImg,
     desc: "The IQC 5.0 panel engages the central question: Beyond Recitation: How Can the Qur'an Truly Reform the Ummah? Featuring Professor Habeebah Oladosu, Ustaaz Alli Abdus Salaam Temitope, and Sheikh Abdullah AbdulHakeem Ajigini, the panelists explore Qur'anic paradigms for reconstructing the intellectual, ethical, spiritual, and societal foundations of the Muslim community.",
     color: '#FFC153',
   },
@@ -69,7 +71,7 @@ const ALL_SESSIONS = [
     also: ['Nasiroh Aadam', 'Khodijah Nurudeen Amoke'],
     category: 'Recitation',
     ticket: 'All Tickets',
-    img: recitersImg,
+    img: reciters2Img,
     desc: "A dedicated showcase of Qur'anic recitation featuring As-Sheikh Abdulbaqiy Shefiu-Badmus alongside specially invited reciters from the IQC 5.0 roster. This session celebrates the beauty, precision, and spiritual depth of tajweed in the recitation of Allah's word.",
     color: '#12522F',
   },
@@ -291,11 +293,11 @@ export default function Sessions({ onNavigate }: SessionsProps) {
                 </div>
 
                 {/* Thumbnail */}
-                <div className="hidden md:block md:w-36 shrink-0 overflow-hidden" style={{ backgroundColor: '#0A331C' }}>
+                <div className="hidden md:block md:w-56 shrink-0 overflow-hidden" style={{ backgroundColor: '#0A331C' }}>
                   <img
                     src={session.img}
                     alt={session.title}
-                    className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-[1.04]"
+                    className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-[1.04]"
                   />
                 </div>
               </div>

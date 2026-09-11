@@ -44,7 +44,13 @@ export function useScrollAnimation(key?: string) {
       // Observe elements added to the DOM after mount (e.g. tab content,
       // filters, lazily-rendered lists). Without this, freshly mounted
       // .scroll-reveal elements stay at opacity:0 and appear as blank space.
-      mutationObserver = new MutationObserver(watch);
+      // The rescan is debounced so rapid DOM mutations (typing, carousel
+      // transitions, filtering) don't re-scan the whole document every tick.
+      let mutationT: ReturnType<typeof setTimeout>;
+      mutationObserver = new MutationObserver(() => {
+        if (mutationT) clearTimeout(mutationT);
+        mutationT = setTimeout(watch, 80);
+      });
       mutationObserver.observe(document.body, { childList: true, subtree: true });
     });
 

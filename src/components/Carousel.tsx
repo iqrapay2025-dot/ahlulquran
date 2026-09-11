@@ -97,16 +97,7 @@ export default function Carousel<T>({
 
   return (
     <div className={rootClassName} onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
-      {slides.map((s, i) => (
-        <div
-          key={i}
-          aria-hidden={i !== index}
-          className={`${slideClassName} transition-opacity duration-700 ${i === index ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
-          style={{ zIndex: i === index ? 2 : 1 }}
-        >
-          {render(s, i)}
-        </div>
-      ))}
+      {render(slides[index], index)}
 
       {arrows}
 
