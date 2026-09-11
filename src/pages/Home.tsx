@@ -96,12 +96,12 @@ export default function Home({ onNavigate }: HomeProps) {
             rootClassName="absolute inset-0"
             slideClassName="absolute inset-0 flex items-center justify-center"
             render={(s) => (
-              <img src={s.src} alt={s.alt} className="w-full h-full object-cover opacity-60" />
+              <img src={s.src} alt={s.alt} className="w-full h-full object-cover opacity-75" />
             )}
           />
-          {/* Cinematic overlay: heavier brand tint + vignette + depth gradient */}
-          <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(10,51,28,0.85), rgba(10,51,28,0.55) 38%, rgba(10,51,28,0.7) 68%, rgba(10,51,28,0.9) 100%)' }} />
-          <div className="absolute inset-0" style={{ background: 'radial-gradient(circle at 50% 38%, rgba(10,51,28,0.28) 0%, rgba(10,51,28,0.5) 55%, rgba(10,51,28,0.72) 100%)' }} />
+          {/* Light brand tint: readable at edges (nav/controls/countdown), clear in the middle */}
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(10,51,28,0.55), rgba(10,51,28,0.22) 38%, rgba(10,51,28,0.3) 68%, rgba(10,51,28,0.62) 100%)' }} />
+          <div className="absolute inset-0" style={{ background: 'radial-gradient(circle at 50% 38%, rgba(10,51,28,0.12) 0%, rgba(10,51,28,0.22) 55%, rgba(10,51,28,0.4) 100%)' }} />
         </div>
         <div className="relative z-30 max-w-3xl mx-auto text-center pt-24 pb-16">
           <span className="hero-badge inline-block text-[11px] font-bold tracking-widest uppercase px-5 py-2.5 rounded-full mb-8" style={{ color: GOLD, backgroundColor: 'rgba(255,193,83,0.12)', border: '1px solid rgba(255,193,83,0.25)' }}>
